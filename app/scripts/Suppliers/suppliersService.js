@@ -40,6 +40,7 @@ All rights reserved
         }
 
         function getSuppliers(){
+            Suppliers = db.getCollection('Suppliers');
             return Suppliers.find({});
         }
 

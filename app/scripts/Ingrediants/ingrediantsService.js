@@ -14,8 +14,11 @@ All rights reserved
             autoload: true
         });
     db.loadDatabase({}, function (result) {
-        if(!db.getCollection('Ingrediants')){
+        if(db.getCollection('Ingrediants') === null){
+            console.log("Hello")
             db.addCollection('Ingrediants');
+            console.log(db.getCollection('Ingrediants') );
+
         }
     });
 
@@ -26,21 +29,29 @@ All rights reserved
 
          var Ingrediants = db.getCollection('Ingrediants');
 
+
         return {
           addIngrediant: addIngrediant,
           findIngrediants: findIngrediants,
           removeIngrediant: removeIngrediant,
+          updateIngrediant: updateIngrediant
 
         };
 
         function addIngrediant(ingrediant) {
+            if(!Ingrediants) {
+                db.addCollection('Ingrediants');
+            }
             Ingrediants.insert(ingrediant);
             db.saveDatabase();
             Ingrediants = db.getCollection('Ingrediants');
         }
 
         function findIngrediants() {
-            Ingrediants.find({});
+            if(!Ingrediants) {
+                return [];
+            }
+            return Ingrediants.find({});
         }
 
         function removeIngrediant(ingrediant) {

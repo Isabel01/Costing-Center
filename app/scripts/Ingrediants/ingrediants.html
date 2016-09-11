@@ -12,23 +12,35 @@
         <md-content flex id="content" >
               <section layout="column" layout-sm="column" layout-wrap> <br>
                     <md-button class="md-raised md-info" href='#/'>Back</md-button> <br>
-      				<h4>Add Ingrediants</h4>
+      				<h4>Add Ingrediant</h4>
       				<md-input-container class="md-icon-float md-block">
-     					<input ng-model="supplier.newName" type="text"  placeholder="Ingrediant Name">
+     					<input ng-model="newIngrediantName" type="text"  placeholder="Ingrediant Name">
     				</md-input-container>
-    				<md-button class="md-raised md-info" ng-click="addSupplier()">Add ingrediant</md-button> <br>
+                    <md-input-container>
+                        <md-select ng-model="newIngrediantSupplier" placeholder="Plese select Supplier">
+                            <md-option ng-value="supplier" ng-repeat="supplier in SuppliersLits  track by $index">{{ supplier.name }}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-input-container>
+                        <label>Cost of Ingrediant in ZAR</label>
+                        <input ng-model="newIngrediantCost" type="number">
+                    </md-input-container>
+    				<md-button class="md-raised md-info" ng-click="addIngrediant()">Add ingrediant</md-button> <br>
                 </section>
 
                 <md-divider></md-divider>
                 
                 <section>
-                	<h4>Suppliers List</h4>
+                	<h4>Ingrediants List</h4>
 	  				<md-list>
-		  				<md-list-item ng-repeat="supplier in suppliers track by $index"  class="noright">
-			    			<p>{{ supplier.name }} </p>
+		  				<md-list-item ng-repeat="ingrediant in Ingrediants | orderBy:'name' track by $index  ""  class="noright">
+			    			<p>{{ingrediant.name}} R{{ingrediant.cost}} ({{ingrediant.supplier.name}})</p>
 			    			<md-button class="md-raised md-warn" ng-click="removeSupplier(supplier)">
 			    				Remove
 			    			</md-button>
+                            <md-button class="md-primary md-raised" ng-click="showAdvanced(ingrediant)">
+                                Edit
+                            </md-button>
 		  				</md-list-item>
 					</md-list>
 				</section>
