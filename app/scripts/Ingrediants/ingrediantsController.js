@@ -1,10 +1,10 @@
 (function(){
     'use strict';
     angular.module('app')
-        .controller('IngrediantsController', ['IngrediantsService', '$q', '$mdDialog', 'SupplierService', '$scope', IngrediantsController])
+        .controller('IngrediantsController', ['IngrediantsService', '$q', '$mdDialog', 'SupplierService', '$scope', '$route', IngrediantsController])
         .controller('DialogControllerIngrediants', ['IngrediantsService', '$q', '$mdDialog', 'SupplierService', '$scope', '$mdDialog',DialogControllerIngrediants]);
    
-    function IngrediantsController(IngrediantsService, $q, $mdDialog, SupplierService, $scope) {
+    function IngrediantsController(IngrediantsService, $q, $mdDialog, SupplierService, $scope, $route) {
         var _IngrediantsController = this;
         console.log("Ingrediants controller");
 
@@ -12,15 +12,34 @@
         $scope.newIngrediantName = null;
         $scope.newIngrediantCost = 0;
         $scope.newIngrediantSupplier = null;
+        $scope.newIngrediantUnit = 'unit';
         $scope.Ingrediants = [];
+        $scope.units = ['unit', 'Kg', 'g', 'ml', 'Liter'];
+
 
         var init = function() {
         	$scope.SuppliersLits  = SupplierService.getSuppliers();
         	$scope.Ingrediants = IngrediantsService.findIngrediants();
-        	console.log("--- " + $scope.Ingrediants  )
+        	buildSuppliers();
+        	
+        	console.log("--- " + $scope.Ingrediants  );
         	if($scope.Ingrediants == null){
         		$scope.Ingrediants = [];
         	}
+
+        	console.log($scope.Ingrediants);
+        	return ;
+        }
+
+
+        var buildSuppliers = function(){
+        	$scope.Ingrediants.map(function(ingrediant){
+        		$scope.SuppliersLits.map(function(supplier){
+        			if (ingrediant.supplier === supplier.$loki) {
+        				ingrediant.supplier = supplier;
+        			}
+        		});
+        	});
         }
 
         init();
@@ -29,7 +48,8 @@
         	var ingrediant = {
         		name: $scope.newIngrediantName,
         		cost: $scope.newIngrediantCost,
-        		supplier: $scope.newIngrediantSupplier
+        		supplier: $scope.newIngrediantSupplier.$loki, 
+        		unit: $scope.newIngrediantUnit
         	}
 
         	IngrediantsService.addIngrediant(ingrediant);
@@ -37,29 +57,31 @@
         	$scope.newIngrediantName = null;
         	$scope.newIngrediantCost = 0;
         	$scope.newIngrediantSupplier = null;
+        	$scope.newIngrediantUnit = 'unit';
+        	buildSuppliers();
 
         };
 
-    $scope.showAdvanced = function(ingrediant) {
-    	console.log("Advanced")
-    $mdDialog.show({
-      controller: DialogControllerIngrediants,
-      templateUrl: 'scripts/Ingrediants/ingrediantsDialog.html',
-      parent: angular.element(document.body),
-      clickOutsideToClose:true,
-      fullscreen: $scope.customFullscreen, // Only for -xs, -sm breakpoints.
-       locals: {
-           ingrediant: ingrediant
-         }
-    })
-    .then(function(answer) {
-      $scope.status = 'You said the information was "' + answer + '".';
-    }, function() {
-      $scope.status = 'You cancelled the dialog.';
-    });
-  };
+        $scope.removeIngrediant = function(ingrediant){
+        	IngrediantsService.removeIngrediant(ingrediant);
+        	$scope.Ingrediants = IngrediantsService.findIngrediants();
+        	buildSuppliers();
 
+        }
 
+	    $scope.showAdvanced = function(ingrediant) {
+	    	console.log("Advanced")
+	    $mdDialog.show({
+	      controller: DialogControllerIngrediants,
+	      templateUrl: 'scripts/Ingrediants/ingrediantsDialog.html',
+	      parent: angular.element(document.body),
+	      clickOutsideToClose:true,
+	      fullscreen: $scope.customFullscreen, // Only for -xs, -sm breakpoints.
+	       locals: {
+	           ingrediant: ingrediant
+	         }
+	    });
+	  };
        
     }
 
@@ -67,7 +89,8 @@
      	console.log("DialogControllerIngrediants");
 
      	$scope.ingrediant = ingrediant;
-		$scope.SuppliersLits  = SupplierService.getSuppliers();   
+		$scope.SuppliersList  = SupplierService.getSuppliers();   
+		$scope.units = ['unit', 'Kg', 'g', 'ml', 'Liter'];
 
 	    $scope.hide = function() {
 	      $mdDialog.hide();
@@ -78,13 +101,13 @@
 	    };
 
 	    $scope.save = function() {
+	    	var supplier = $scope.ingrediant.supplier
+	    	$scope.ingrediant.supplier = supplier.$loki;
 	    	IngrediantsService.updateIngrediant($scope.ingrediant);
+	    	$scope.ingrediant.supplier = supplier;
 	    	$mdDialog.cancel();
-	    	$scope.SuppliersLits  = SupplierService.getSuppliers();   
-	       
 	    }
-    }
 
-    
+    }    
 
 })();

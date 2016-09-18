@@ -1,3 +1,55 @@
-<dev>
-Meals
-</dev>
+<div style="width:100%" layout="row">
+    
+
+    <div flex layout="column" tabIndex="-1" role="main" class="md-whiteframe-z2">
+
+        <md-toolbar  layout-align="center center" layout="row" class="md-whiteframe-z1">
+            <h1>
+                Manage Meals
+            </h1>
+        </md-toolbar>
+
+        <md-content flex id="content" >
+              <section layout="column" layout-sm="column" layout-wrap> <br>
+                    <md-button class="md-raised md-info" href='#/'>Back</md-button>
+      				<h4>Add Ingrediant</h4>
+      				<md-input-container class="md-icon-float md-block">
+     					<input ng-model="newIngrediantName" type="text"  placeholder="Ingrediant Name">
+    				</md-input-container>
+                      <md-input-container>
+                        <md-select ng-model="newIngrediantUnit" placeholder="Plese select Unit">
+                            <md-option ng-value="unit" ng-repeat="unit in units track by $index">{{unit}}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-input-container>
+                        <md-select ng-model="newIngrediantSupplier" placeholder="Plese select Supplier">
+                            <md-option ng-value="supplier" ng-repeat="supplier in SuppliersLits  track by $index">{{ supplier.name }}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-input-container>
+                        <label>Cost of Ingrediant in ZAR</label>
+                        <input ng-model="newIngrediantCost" type="number">
+                    </md-input-container>
+    				<md-button class="md-raised md-info" ng-click="addIngrediant()">Add ingrediant</md-button> <br>
+                </section>
+
+                <md-divider></md-divider>
+                
+                <section>
+                	<h4>Ingrediants List</h4>
+	  				<md-list>
+		  				<md-list-item ng-repeat="ingrediant in Ingrediants | orderBy:'name' track by $index  ""  class="noright">
+			    			<p>{{ingrediant.name}} R{{ingrediant.cost}}  per {{ingrediant.unit}} ({{ingrediant.supplier.name}})</p>
+			    			<md-button class="md-raised md-warn" ng-click="removeIngrediant(ingrediant)">
+			    				Remove
+			    			</md-button>
+                            <md-button class="md-primary md-raised" ng-click="showAdvanced(ingrediant)">
+                                Edit
+                            </md-button>
+		  				</md-list-item>
+					</md-list>
+				</section>
+        </md-content>
+
+    </div>
+</div>

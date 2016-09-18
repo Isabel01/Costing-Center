@@ -15,9 +15,14 @@
         <md-input-container class="md-icon-float md-block">
           <input ng-model="ingrediant.name" type="text"  placeholder="Ingrediant Name">
         </md-input-container>
+         <md-input-container>
+                        <md-select ng-model="ingrediant.unit" placeholder="Plese select Unit">
+                            <md-option ng-value="unit" ng-repeat="unit in units track by $index">{{unit}}</md-option>
+                        </md-select>
+                    </md-input-container>
         <md-input-container>
           <md-select ng-model="ingrediant.supplier" placeholder="Plese select Supplier">
-              <md-option ng-value="supplier" ng-repeat="supplier in SuppliersLits  track by $index">{{ supplier.name }}</md-option>
+              <md-option ng-value="supplier" ng-repeat="supplier in SuppliersList  track by $index">{{supplier.name}}</md-option>
           </md-select>
         </md-input-container>
         <md-input-container>

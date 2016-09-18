@@ -41,6 +41,7 @@ All rights reserved
         function addIngrediant(ingrediant) {
             if(!Ingrediants) {
                 db.addCollection('Ingrediants');
+                Ingrediants = db.getCollection('Ingrediants');``
             }
             Ingrediants.insert(ingrediant);
             db.saveDatabase();
